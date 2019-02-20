@@ -1,0 +1,10 @@
+---
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/tls-acme: "true"
+  hosts: ["grafana.liskdev.net"]
+  tls:
+    - hosts:
+      - grafana.liskdev.net
+      secretName: grafana-tls

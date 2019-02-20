@@ -1,0 +1,29 @@
+---
+alertmanager:
+  enabled: false
+pushgateway:
+  enabled: false
+server:
+  persistentVolume:
+    enabled: false
+extraScrapeConfigs: |
+  - job_name: 'redis'
+    kubernetes_sd_configs:
+      - role: service
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
+        action: keep
+        regex: true
+      - source_labels: [__meta_kubernetes_service_label_app]
+        action: keep
+        regex: redis
+      - source_labels: [__meta_kubernetes_service_label_release]
+        action: replace
+        target_label: instance
+  - job_name: 'node-exporter'
+    kubernetes_sd_configs:
+      - role: endpoints
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_endpoints_name]
+        action: keep
+        regex: prometheus-node-exporter
